@@ -6,13 +6,12 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {CSSTransition} from 'react-transition-group';
 
-import * as GlobalActions from 'actions/global_actions';
-
 import MainMenu from 'components/main_menu';
 
 import {Constants} from 'utils/constants';
 
 type Action = {
+    emitUserLoggedOutEvent: () => void;
     openRhsMenu: () => void;
 }
 
@@ -28,7 +27,7 @@ const ANIMATION_DURATION = 500;
 
 export default class SidebarRightMenu extends React.PureComponent<Props> {
     handleEmitUserLoggedOutEvent = () => {
-        GlobalActions.emitUserLoggedOutEvent();
+        this.props.actions.emitUserLoggedOutEvent();
     };
 
     render() {

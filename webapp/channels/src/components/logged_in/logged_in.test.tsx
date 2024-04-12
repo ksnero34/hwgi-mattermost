@@ -25,6 +25,7 @@ describe('components/logged_in/LoggedIn', () => {
         mfaRequired: false,
         actions: {
             autoUpdateTimezone: jest.fn(),
+            emitUserLoggedOutEvent: jest.fn(),
             getChannelURLAction: jest.fn(),
             markChannelAsViewedOnServer: jest.fn(),
             updateApproximateViewTime: jest.fn(),
