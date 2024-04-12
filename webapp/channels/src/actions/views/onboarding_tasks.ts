@@ -23,7 +23,7 @@ export function switchToChannels(): ActionFuncAsync<boolean> {
         const teamId = getCurrentTeamId(state) || LocalStorageStore.getPreviousTeamId(currentUserId);
         const team = getTeam(state, teamId || '');
 
-        const channel = await getTeamRedirectChannelIfIsAccesible(user, team);
+        const channel = await dispatch(getTeamRedirectChannelIfIsAccesible(user, team));
         const channelName = channel?.name || Constants.DEFAULT_CHANNEL;
 
         getHistory().push(`/${team.name}/channels/${channelName}`);
