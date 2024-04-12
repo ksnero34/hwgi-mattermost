@@ -7,8 +7,6 @@ import {FormattedMessage} from 'react-intl';
 import type {Post} from '@mattermost/types/posts';
 import type {UserProfile} from '@mattermost/types/users';
 
-import {sendAddToChannelEphemeralPost} from 'actions/global_actions';
-
 import AtMention from 'components/at_mention';
 
 import {Constants} from 'utils/constants';
@@ -17,6 +15,7 @@ import {t} from 'utils/i18n';
 interface Actions {
     addChannelMember: (channelId: string, userId: string, rootId: string) => void;
     removePost: (post: Post) => void;
+    sendAddToChannelEphemeralPost: (user: UserProfile, addedUsername: string, addedUserId: string, channelId: string, postRootId: string, timestamp: number) => void;
 }
 
 export interface Props {
@@ -51,7 +50,7 @@ export default class PostAddChannelMember extends React.PureComponent<Props, Sta
             userIds.forEach((userId, index) => {
                 createAt++;
                 this.props.actions.addChannelMember(post.channel_id, userId, post.root_id);
-                sendAddToChannelEphemeralPost(currentUser, usernames[index], userId, post.channel_id, post.root_id, createAt);
+                this.props.actions.sendAddToChannelEphemeralPost(currentUser, usernames[index], userId, post.channel_id, post.root_id, createAt);
             });
 
             this.props.actions.removePost(post);
