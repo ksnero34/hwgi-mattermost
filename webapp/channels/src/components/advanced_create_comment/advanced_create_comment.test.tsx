@@ -94,6 +94,7 @@ describe('components/AdvancedCreateComment', () => {
         savePreferences(): Promise<ActionResult> {
             throw new Error('Function not implemented.');
         },
+        emitLocalUserTypingEvent: jest.fn(),
     };
 
     const submitEvent = {
