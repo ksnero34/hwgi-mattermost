@@ -108,7 +108,6 @@ exports[`components/ChannelHeader should match snapshot with last active display
             </span>
           </span>
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -118,10 +117,9 @@ exports[`components/ChannelHeader should match snapshot with last active display
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -130,7 +128,7 @@ exports[`components/ChannelHeader should match snapshot with last active display
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -382,7 +380,6 @@ exports[`components/ChannelHeader should match snapshot with no last active disp
             />
           </span>
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -392,10 +389,9 @@ exports[`components/ChannelHeader should match snapshot with no last active disp
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -404,7 +400,7 @@ exports[`components/ChannelHeader should match snapshot with no last active disp
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -601,7 +597,6 @@ exports[`components/ChannelHeader should render active channel files 1`] = `
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -619,10 +614,9 @@ exports[`components/ChannelHeader should render active channel files 1`] = `
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -632,10 +626,9 @@ exports[`components/ChannelHeader should render active channel files 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left channel-header__icon--active"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -644,7 +637,7 @@ exports[`components/ChannelHeader should render active channel files 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -839,7 +832,6 @@ exports[`components/ChannelHeader should render active flagged posts 1`] = `
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -857,10 +849,9 @@ exports[`components/ChannelHeader should render active flagged posts 1`] = `
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -870,10 +861,9 @@ exports[`components/ChannelHeader should render active flagged posts 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -882,7 +872,7 @@ exports[`components/ChannelHeader should render active flagged posts 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -1077,7 +1067,6 @@ exports[`components/ChannelHeader should render active mentions posts 1`] = `
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -1095,10 +1084,9 @@ exports[`components/ChannelHeader should render active mentions posts 1`] = `
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -1108,10 +1096,9 @@ exports[`components/ChannelHeader should render active mentions posts 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -1120,7 +1107,7 @@ exports[`components/ChannelHeader should render active mentions posts 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -1315,7 +1302,6 @@ exports[`components/ChannelHeader should render active pinned posts 1`] = `
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -1333,10 +1319,9 @@ exports[`components/ChannelHeader should render active pinned posts 1`] = `
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left channel-header__icon--active"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -1346,10 +1331,9 @@ exports[`components/ChannelHeader should render active pinned posts 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -1358,7 +1342,7 @@ exports[`components/ChannelHeader should render active pinned posts 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -1553,7 +1537,6 @@ exports[`components/ChannelHeader should render archived view 1`] = `
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -1571,10 +1554,9 @@ exports[`components/ChannelHeader should render archived view 1`] = `
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -1584,10 +1566,9 @@ exports[`components/ChannelHeader should render archived view 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -1596,7 +1577,7 @@ exports[`components/ChannelHeader should render archived view 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -1823,7 +1804,6 @@ exports[`components/ChannelHeader should render correct menu when muted 1`] = `
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -1841,10 +1821,9 @@ exports[`components/ChannelHeader should render correct menu when muted 1`] = `
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -1854,10 +1833,9 @@ exports[`components/ChannelHeader should render correct menu when muted 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -1866,7 +1844,7 @@ exports[`components/ChannelHeader should render correct menu when muted 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -2061,7 +2039,6 @@ exports[`components/ChannelHeader should render not active channel files 1`] = `
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -2079,10 +2056,9 @@ exports[`components/ChannelHeader should render not active channel files 1`] = `
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left channel-header__icon--active"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -2092,10 +2068,9 @@ exports[`components/ChannelHeader should render not active channel files 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -2104,7 +2079,7 @@ exports[`components/ChannelHeader should render not active channel files 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -2372,7 +2347,6 @@ exports[`components/ChannelHeader should render properly when custom status is e
             </span>
           </span>
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -2382,10 +2356,9 @@ exports[`components/ChannelHeader should render properly when custom status is e
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -2394,7 +2367,7 @@ exports[`components/ChannelHeader should render properly when custom status is e
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -2684,7 +2657,6 @@ exports[`components/ChannelHeader should render properly when custom status is s
             </div>
           </span>
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -2694,10 +2666,9 @@ exports[`components/ChannelHeader should render properly when custom status is s
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -2706,7 +2677,7 @@ exports[`components/ChannelHeader should render properly when custom status is s
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -2903,7 +2874,6 @@ exports[`components/ChannelHeader should render properly when empty 1`] = `
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -2921,10 +2891,9 @@ exports[`components/ChannelHeader should render properly when empty 1`] = `
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -2934,10 +2903,9 @@ exports[`components/ChannelHeader should render properly when empty 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -2946,7 +2914,7 @@ exports[`components/ChannelHeader should render properly when empty 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -3141,7 +3109,6 @@ exports[`components/ChannelHeader should render properly when populated 1`] = `
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -3159,10 +3126,9 @@ exports[`components/ChannelHeader should render properly when populated 1`] = `
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -3172,10 +3138,9 @@ exports[`components/ChannelHeader should render properly when populated 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -3184,7 +3149,7 @@ exports[`components/ChannelHeader should render properly when populated 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -3379,7 +3344,6 @@ exports[`components/ChannelHeader should render properly when populated with cha
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -3397,10 +3361,9 @@ exports[`components/ChannelHeader should render properly when populated with cha
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -3410,10 +3373,9 @@ exports[`components/ChannelHeader should render properly when populated with cha
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -3422,7 +3384,7 @@ exports[`components/ChannelHeader should render properly when populated with cha
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -3643,7 +3605,6 @@ exports[`components/ChannelHeader should render shared view 1`] = `
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -3661,10 +3622,9 @@ exports[`components/ChannelHeader should render shared view 1`] = `
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -3674,10 +3634,9 @@ exports[`components/ChannelHeader should render shared view 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -3686,7 +3645,7 @@ exports[`components/ChannelHeader should render shared view 1`] = `
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
@@ -3883,7 +3842,6 @@ exports[`components/ChannelHeader should render the pinned icon with the pinned 
           id="channelHeaderDescription"
         >
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="member-rhs__trigger channel-header__icon channel-header__icon--left channel-header__icon--wide"
             buttonId="member_rhs"
             iconComponent={
@@ -3901,10 +3859,9 @@ exports[`components/ChannelHeader should render the pinned icon with the pinned 
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="channelMembers"
+            tooltip="Members"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderPinButton"
             iconComponent={
@@ -3922,10 +3879,9 @@ exports[`components/ChannelHeader should render the pinned icon with the pinned 
               </React.Fragment>
             }
             onClick={[Function]}
-            tooltipKey="pinnedPosts"
+            tooltip="Pinned messages"
           />
           <HeaderIconWrapper
-            ariaLabel={true}
             buttonClass="channel-header__icon channel-header__icon--wide channel-header__icon--left"
             buttonId="channelHeaderFilesButton"
             iconComponent={
@@ -3934,7 +3890,7 @@ exports[`components/ChannelHeader should render the pinned icon with the pinned 
               />
             }
             onClick={[Function]}
-            tooltipKey="channelFiles"
+            tooltip="Channel files"
           />
           <div
             className="header-popover-text-measurer"
