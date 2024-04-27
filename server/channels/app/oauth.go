@@ -633,6 +633,7 @@ func (a *App) LoginByOAuth(c request.CTX, service string, userData io.Reader, te
 		// OAuth doesn't run through CheckUserPreflightAuthenticationCriteria, so prevent bot login
 		// here manually. Technically, the auth data above will fail to match a bot in the first
 		// place, but explicit is always better.
+		hwgi_Info("[hwgi_audit_log] :: OAuth를 통한 로그인 userId : " + user.Username + " Ip : " + c.XForwardedFor())
 		if user.IsBot {
 			return nil, model.NewAppError("loginByOAuth", "api.user.login_by_oauth.bot_login_forbidden.app_error", nil, "", http.StatusForbidden)
 		}

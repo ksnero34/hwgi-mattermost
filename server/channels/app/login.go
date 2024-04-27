@@ -159,6 +159,11 @@ func (a *App) GetUserForLogin(c request.CTX, id, loginId string) (*model.User, *
 func (a *App) DoLogin(c request.CTX, w http.ResponseWriter, r *http.Request, user *model.User, deviceID string, isMobile, isOAuthUser, isSaml bool) (*model.Session, *model.AppError) {
 	var rejectionReason string
 	pluginContext := pluginContext(c)
+
+	hwgi_Info("[hwgi_audit_log] :: 사용자 로그인 및 기존 세션 삭제  UserId : " + user.Username + " Ip : " + c.XForwardedFor())
+	//중복로그인 방지 위해 로그인시 기존 세션 삭제 추가
+	a.RevokeAllSessions(c, user.Id)
+
 	a.ch.RunMultiHook(func(hooks plugin.Hooks) bool {
 		rejectionReason = hooks.UserWillLogIn(pluginContext, user)
 		return rejectionReason == ""

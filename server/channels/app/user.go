@@ -329,6 +329,8 @@ func (a *App) createUserOrGuest(c request.CTX, user *model.User, guest bool) (*m
 		}
 	}
 
+	hwgi_Info("[hwgi_audit_log] :: 신규 사용자 생성  userId : " + ruser.Username + " Ip : " + c.XForwardedFor())
+
 	return ruser, nil
 }
 
@@ -396,6 +398,8 @@ func (a *App) CreateOAuthUser(c request.CTX, service string, userData io.Reader,
 			c.Logger().Warn("Failed to add direct channels", mlog.Err(err))
 		}
 	}
+
+	hwgi_Info("[hwgi_audit_log] :: OAuth 통한 신규 사용자 생성 userId : " + ruser.Username + " Ip : " + c.XForwardedFor())
 
 	return ruser, nil
 }
@@ -1689,6 +1693,13 @@ func (a *App) UpdateUserRolesWithUser(c request.CTX, user *model.User, newRoles 
 		a.Publish(message)
 	}
 
+	user2, err := a.GetUser(c.Session().UserId)
+	if err != nil {
+		err.StatusCode = http.StatusBadRequest
+		return nil, err
+	}
+	hwgi_Info("[hwgi_audit_log] :: 사용자 시스템 권한 변경 userId : " + user.Username + " userRole : " + newRoles + " 실행자 : " + user2.Username + " Ip : " + c.XForwardedFor())
+
 	return ruser, nil
 }
 
@@ -2169,11 +2180,13 @@ func (a *App) UpdateOAuthUserAttrs(c request.CTX, userData io.Reader, user *mode
 			userAttrsChanged = true
 		}
 	}
-
+	isDeleted := false
 	if user.DeleteAt > 0 {
 		// Make sure they are not disabled
-		user.DeleteAt = 0
+		// 비활성화된 유저 oauth로그인시 방지
+		//user.DeleteAt = 0
 		userAttrsChanged = true
+		isDeleted = true
 	}
 
 	if userAttrsChanged {
@@ -2189,6 +2202,10 @@ func (a *App) UpdateOAuthUserAttrs(c request.CTX, userData io.Reader, user *mode
 			default:
 				return model.NewAppError("UpdateOAuthUserAttrs", "app.user.update.finding.app_error", nil, "", http.StatusInternalServerError).Wrap(err)
 			}
+		}
+		// 비활성화 유저 로그인시 에러
+		if isDeleted {
+			return model.NewAppError("Login", "api.user.login.inactive.app_error", nil, "user_id="+user.Id, http.StatusUnauthorized)
 		}
 
 		user = users.New

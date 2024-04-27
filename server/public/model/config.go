@@ -406,6 +406,7 @@ type ServiceSettings struct {
 	UniqueEmojiReactionLimitPerPost                   *int    `access:"site_posts"`
 	RefreshPostStatsRunTime                           *string `access:"site_users_and_teams"`
 	MaximumPayloadSizeBytes                           *int64  `access:"environment_file_storage,write_restrictable,cloud_restrictable"`
+	//encryptionKey                                     []byte
 }
 
 var MattermostGiphySdkKey string
@@ -920,6 +921,9 @@ func (s *ServiceSettings) SetDefaults(isUpdate bool) {
 	if s.MaximumPayloadSizeBytes == nil {
 		s.MaximumPayloadSizeBytes = NewInt64(100000)
 	}
+	// if s.encryptionKey == nil {
+	// 	s.encryptionKey = []byte("테스트키키키키")
+	// }
 }
 
 type ClusterSettings struct {

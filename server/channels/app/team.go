@@ -164,6 +164,13 @@ func (a *App) CreateTeam(c request.CTX, team *model.Team) (*model.Team, *model.A
 		}
 	}
 
+	// user2, err := a.GetUser(c.Session().UserId)
+	// if err != nil {
+	// 	// err.StatusCode = http.StatusBadRequest
+	// 	return nil, nil
+	// }
+	// hwgi_Info("[hwgi_audit_log] :: 신규 팀 생성 : " + team.DisplayName + " 실행자 : " + user2.Username + " Ip : " + c.XForwardedFor())
+
 	return rteam, nil
 }
 
@@ -186,6 +193,8 @@ func (a *App) CreateTeamWithUser(c request.CTX, team *model.Team, userID string)
 	if _, err := a.JoinUserToTeam(c, rteam, user, ""); err != nil {
 		return nil, err
 	}
+
+	hwgi_Info("[hwgi_audit_log] :: 신규 팀 생성 : " + team.DisplayName + " 실행자 : " + user.Username + " Ip : " + c.XForwardedFor())
 
 	return rteam, nil
 }
@@ -548,6 +557,26 @@ func (a *App) UpdateTeamMemberSchemeRoles(c request.CTX, teamID string, userID s
 		return nil, appErr
 	}
 
+	team, err := a.GetTeam(teamID)
+	if err != nil {
+
+	}
+	user, err := a.GetUser(userID)
+	if err != nil {
+
+	}
+
+	user2, err := a.GetUser(c.Session().UserId)
+	if err != nil {
+
+	}
+	memeberRole := "구성원"
+	if member.SchemeAdmin == true {
+		memeberRole = "팀관리자"
+	}
+
+	hwgi_Info("[hwgi_audit_log] :: 팀 멤버 권한 수정 : " + team.DisplayName + " / " + user.Username + " / " + memeberRole + " 실행자 : " + user2.Username + " Ip : " + c.XForwardedFor())
+
 	return member, nil
 }
 
@@ -605,6 +634,13 @@ func (a *App) AddUserToTeam(c request.CTX, teamID string, userID string, userReq
 	if err != nil {
 		return nil, nil, err
 	}
+
+	user2, err := a.GetUser(c.Session().UserId)
+	if err != nil {
+
+	}
+
+	hwgi_Info("[hwgi_audit_log] :: 팀 멤버 추가 : " + team.DisplayName + " / " + user.Username + " 실행자 : " + user2.Username + " Ip : " + c.XForwardedFor())
 
 	return team, teamMember, nil
 }
@@ -1195,6 +1231,13 @@ func (a *App) RemoveUserFromTeam(c request.CTX, teamID string, userID string, re
 	if err := a.LeaveTeam(c, team, user, requestorId); err != nil {
 		return err
 	}
+
+	user2, err := a.GetUser(c.Session().UserId)
+	if err != nil {
+		// err.StatusCode = http.StatusBadRequest
+		//return nil, nil
+	}
+	hwgi_Info("[hwgi_audit_log] :: 팀 멤버 제거 : " + team.DisplayName + " / " + user.Username + " 실행자 : " + user2.Username + " Ip : " + c.XForwardedFor())
 
 	return nil
 }

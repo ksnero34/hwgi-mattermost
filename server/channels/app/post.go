@@ -5,10 +5,16 @@ package app
 
 import (
 	"context"
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
+	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -36,12 +42,33 @@ var atMentionPattern = regexp.MustCompile(`\B@`)
 
 // Ensure post service wrapper implements `product.PostService`
 var _ product.PostService = (*postServiceWrapper)(nil)
+var encInit = false
+var encryptingKey []byte = []byte("")
 
 // postServiceWrapper provides an implementation of `product.PostService` for use by products.
 type postServiceWrapper struct {
 	app AppIface
 }
 
+func init() {
+	fmt.Println("===========암호화키 확인===========")
+	cmd := []string{"java", "-cp", "/mattermost/bin/keyReceiver.jar", "App"}
+	output, err := exec.Command(cmd[0], cmd[1:]...).Output()
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	//fmt.Println(output)
+	outputString := string(output)
+	fmt.Println(outputString)
+
+	// 특정 값 추출
+	encryptingKey = []byte(outputString)
+
+	//encryptingKey = []byte("9jNyfLp6l-_=rRaFSU-3Or.UzKhUl[$c")
+	fmt.Println("==============called init===========\n")
+}
 func (s *postServiceWrapper) CreatePost(ctx request.CTX, post *model.Post) (*model.Post, *model.AppError) {
 	return s.app.CreatePostMissingChannel(ctx, post, true, true)
 }
@@ -337,8 +364,13 @@ func (a *App) CreatePost(c request.CTX, post *model.Post, channel *model.Channel
 	if previewPost != nil {
 		post.AddProp(model.PostPropsPreviewedPost, previewPost.PostID)
 	}
+	//암호화할부분//
+	post.Message = a.encrypt(post.Message)
 
 	rpost, nErr := a.Srv().Store().Post().Save(post)
+	//저장후 복호화
+	post.Message = a.decrypt(post.Message)
+	rpost.Message = a.decrypt(rpost.Message)
 	if nErr != nil {
 		var appErr *model.AppError
 		var invErr *store.ErrInvalidInput
@@ -524,6 +556,9 @@ func (a *App) handlePostEvents(c request.CTX, post *model.Post, user *model.User
 	a.Srv().Platform().InvalidateCacheForChannel(channel)
 	a.invalidateCacheForChannelPosts(channel.Id)
 
+	//복호화
+	post.Message = a.decrypt(post.Message)
+
 	if _, err := a.SendNotifications(c, post, team, channel, user, parentPostList, setOnline); err != nil {
 		return err
 	}
@@ -687,6 +722,7 @@ func (a *App) UpdatePost(c request.CTX, receivedUpdatedPost *model.Post, safeUpd
 
 	if newPost.Message != receivedUpdatedPost.Message {
 		newPost.Message = receivedUpdatedPost.Message
+
 		newPost.EditAt = model.GetMillis()
 		newPost.Hashtags, _ = model.ParseHashtags(receivedUpdatedPost.Message)
 	}
@@ -724,7 +760,12 @@ func (a *App) UpdatePost(c request.CTX, receivedUpdatedPost *model.Post, safeUpd
 	// the last known good.
 	newPost.Metadata = oldPost.Metadata
 
+	//암호화
+	newPost.Message = a.encrypt(newPost.Message)
+
 	rpost, nErr := a.Srv().Store().Post().Update(c, newPost, oldPost)
+	rpost.Message = a.decrypt(rpost.Message)
+	newPost.Message = a.decrypt(newPost.Message)
 	if nErr != nil {
 		var appErr *model.AppError
 		switch {
@@ -902,6 +943,12 @@ func (a *App) GetPostsPage(options model.GetPostsOptions) (*model.PostList, *mod
 		}
 	}
 
+	//복호화//
+	for index, post := range postList.Posts {
+		post.Message = a.decrypt(post.Message)
+		postList.Posts[index] = post
+	}
+
 	// The postList is sorted as only rootPosts Order is included
 	if appErr := a.filterInaccessiblePosts(postList, filterPostOptions{assumeSortedCreatedAt: true}); appErr != nil {
 		return nil, appErr
@@ -924,6 +971,12 @@ func (a *App) GetPosts(channelID string, offset int, limit int) (*model.PostList
 		}
 	}
 
+	//복호화//
+	for index, post := range postList.Posts {
+		post.Message = a.decrypt(post.Message)
+		postList.Posts[index] = post
+	}
+
 	if appErr := a.filterInaccessiblePosts(postList, filterPostOptions{}); appErr != nil {
 		return nil, appErr
 	}
@@ -941,6 +994,12 @@ func (a *App) GetPostsSince(options model.GetPostsSinceOptions) (*model.PostList
 	postList, err := a.Srv().Store().Post().GetPostsSince(options, true, a.Config().GetSanitizeOptions())
 	if err != nil {
 		return nil, model.NewAppError("GetPostsSince", "app.post.get_posts_since.app_error", nil, "", http.StatusInternalServerError).Wrap(err)
+	}
+
+	//복호화//
+	for index, post := range postList.Posts {
+		post.Message = a.decrypt(post.Message)
+		postList.Posts[index] = post
 	}
 
 	if appErr := a.filterInaccessiblePosts(postList, filterPostOptions{assumeSortedCreatedAt: true}); appErr != nil {
@@ -963,6 +1022,9 @@ func (a *App) GetSinglePost(postID string, includeDeleted bool) (*model.Post, *m
 			return nil, model.NewAppError("GetSinglePost", "app.post.get.app_error", nil, "", http.StatusInternalServerError).Wrap(err)
 		}
 	}
+
+	//복호화//
+	post.Message = a.decrypt(post.Message)
 
 	firstInaccessiblePostTime, appErr := a.isInaccessiblePost(post)
 	if appErr != nil {
@@ -992,6 +1054,12 @@ func (a *App) GetPostThread(postID string, opts model.GetPostsOptions, userID st
 		}
 	}
 
+	//복호화//
+	for index, post := range posts.Posts {
+		post.Message = a.decrypt(post.Message)
+		posts.Posts[index] = post
+	}
+
 	// Get inserts the requested post first in the list, then adds the sorted threadPosts.
 	// So, the whole postList.Order is not sorted.
 	// The fully sorted list comes only when the CollapsedThreads is true and the Directions is not empty.
@@ -1015,6 +1083,12 @@ func (a *App) GetFlaggedPosts(userID string, offset int, limit int) (*model.Post
 		return nil, model.NewAppError("GetFlaggedPosts", "app.post.get_flagged_posts.app_error", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
 
+	//복호화//
+	for index, post := range postList.Posts {
+		post.Message = a.decrypt(post.Message)
+		postList.Posts[index] = post
+	}
+
 	if appErr := a.filterInaccessiblePosts(postList, filterPostOptions{assumeSortedCreatedAt: true}); appErr != nil {
 		return nil, appErr
 	}
@@ -1030,6 +1104,12 @@ func (a *App) GetFlaggedPostsForTeam(userID, teamID string, offset int, limit in
 		return nil, model.NewAppError("GetFlaggedPostsForTeam", "app.post.get_flagged_posts.app_error", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
 
+	//복호화//
+	for index, post := range postList.Posts {
+		post.Message = a.decrypt(post.Message)
+		postList.Posts[index] = post
+	}
+
 	if appErr := a.filterInaccessiblePosts(postList, filterPostOptions{assumeSortedCreatedAt: true}); appErr != nil {
 		return nil, appErr
 	}
@@ -1043,6 +1123,12 @@ func (a *App) GetFlaggedPostsForChannel(userID, channelID string, offset int, li
 	postList, err := a.Srv().Store().Post().GetFlaggedPostsForChannel(userID, channelID, offset, limit)
 	if err != nil {
 		return nil, model.NewAppError("GetFlaggedPostsForChannel", "app.post.get_flagged_posts.app_error", nil, "", http.StatusInternalServerError).Wrap(err)
+	}
+
+	//복호화//
+	for index, post := range postList.Posts {
+		post.Message = a.decrypt(post.Message)
+		postList.Posts[index] = post
 	}
 
 	if appErr := a.filterInaccessiblePosts(postList, filterPostOptions{assumeSortedCreatedAt: true}); appErr != nil {
@@ -1067,6 +1153,12 @@ func (a *App) GetPermalinkPost(c request.CTX, postID string, userID string) (*mo
 		default:
 			return nil, model.NewAppError("GetPermalinkPost", "app.post.get.app_error", nil, "", http.StatusInternalServerError).Wrap(nErr)
 		}
+	}
+
+	//복호화//
+	for index, post := range list.Posts {
+		post.Message = a.decrypt(post.Message)
+		list.Posts[index] = post
 	}
 
 	if len(list.Order) != 1 {
@@ -1104,6 +1196,12 @@ func (a *App) GetPostsBeforePost(options model.GetPostsOptions) (*model.PostList
 		}
 	}
 
+	//복호화//
+	for index, post := range postList.Posts {
+		post.Message = a.decrypt(post.Message)
+		postList.Posts[index] = post
+	}
+
 	// GetPostsBefore orders by channel id and deleted at,
 	// before sorting based on created at.
 	// but the deleted at is only ever where deleted at = 0,
@@ -1134,6 +1232,12 @@ func (a *App) GetPostsAfterPost(options model.GetPostsOptions) (*model.PostList,
 		}
 	}
 
+	//복호화//
+	for index, post := range postList.Posts {
+		post.Message = a.decrypt(post.Message)
+		postList.Posts[index] = post
+	}
+
 	// GetPostsAfter orders by channel id and deleted at,
 	// before sorting based on created at.
 	// but the deleted at is only ever where deleted at = 0,
@@ -1160,6 +1264,12 @@ func (a *App) GetPostsAroundPost(before bool, options model.GetPostsOptions) (*m
 		postList, err = a.Srv().Store().Post().GetPostsBefore(options, sanitize)
 	} else {
 		postList, err = a.Srv().Store().Post().GetPostsAfter(options, sanitize)
+	}
+
+	//복호화//
+	for index, post := range postList.Posts {
+		post.Message = a.decrypt(post.Message)
+		postList.Posts[index] = post
 	}
 
 	if err != nil {
@@ -1195,6 +1305,9 @@ func (a *App) GetPostAfterTime(channelID string, time int64, collapsedThreads bo
 	if err != nil {
 		return nil, model.NewAppError("GetPostAfterTime", "app.post.get_post_after_time.app_error", nil, "", http.StatusInternalServerError).Wrap(err)
 	}
+
+	//복호화//
+	post.Message = a.decrypt(post.Message)
 
 	a.applyPostWillBeConsumedHook(&post)
 
@@ -1317,6 +1430,13 @@ func (a *App) GetPostsForChannelAroundLastUnread(c request.CTX, channelID, userI
 	if err != nil {
 		return nil, err
 	}
+
+	//복호화
+	for index, post := range postList.Posts {
+		post.Message = a.decrypt(post.Message)
+		postList.Posts[index] = post
+	}
+
 	// Reset order to only include the last unread post: if the thread appears in the centre
 	// channel organically, those replies will be added below.
 	postList.Order = []string{}
@@ -2635,3 +2755,101 @@ func (a *App) MoveThread(c request.CTX, postID string, sourceChannelID, channelI
 	c.Logger().Info(msg)
 	return nil
 }
+
+func (a *App) encrypt(stringToEncrypt string) (encryptedString string) {
+	//a.beforeEnc()
+	//Since the key is in string, we need to convert decode it to bytes
+	key := encryptingKey
+	plaintext := []byte(stringToEncrypt)
+
+	//Create a new Cipher Block from the key
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	//Create a new GCM - https://en.wikipedia.org/wiki/Galois/Counter_Mode
+	//https://golang.org/pkg/crypto/cipher/#NewGCM
+	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	//Create a nonce. Nonce should be from GCM
+	nonce := make([]byte, aesGCM.NonceSize())
+	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
+		panic(err.Error())
+	}
+
+	//Encrypt the data using aesGCM.Seal
+	//Since we don't want to save the nonce somewhere else in this case, we add it as a prefix to the encrypted data. The first nonce argument in Seal is the prefix.
+	ciphertext := aesGCM.Seal(nonce, nonce, plaintext, nil)
+	return fmt.Sprintf("%x", ciphertext)
+}
+
+func (a *App) decrypt(encryptedString string) (decryptedString string) {
+	//a.beforeEnc()
+	key := encryptingKey
+	enc, err := hex.DecodeString(encryptedString)
+	if err != nil {
+		return encryptedString
+		//panic(err.Error())
+	}
+	//Create a new Cipher Block from the key
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return encryptedString
+		//panic(err.Error())
+	}
+
+	//Create a new GCM
+	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		return encryptedString
+		//panic(err.Error())
+	}
+
+	//Get the nonce size
+	nonceSize := aesGCM.NonceSize()
+
+	//Extract the nonce from the encrypted data
+	//slice runtime에러 방지
+	if nonceSize > len(enc) {
+		return encryptedString
+	}
+	nonce, ciphertext := enc[:nonceSize], enc[nonceSize:]
+
+	//Decrypt the data
+	plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		//panic(err.Error())
+		return encryptedString
+	}
+
+	return fmt.Sprintf("%s", plaintext)
+}
+
+// func (a *App) beforeEnc() {
+// 	//fmt.Println(*a.Config().ServiceSettings.encryptionKey)
+// 	if encInit == false {
+// 		fmt.Println("===========암호화키 확인===========")
+
+// 		// cmd := []string{"java", "-cp", "/mattermost/bin/keyReceiver.jar", "App"}
+// 		// output, err := exec.Command(cmd[0], cmd[1:]...).Output()
+
+// 		// if err != nil {
+// 		// 	fmt.Println(err)
+// 		// 	return
+// 		// }
+// 		// //fmt.Println(output)
+// 		// outputString := string(output)
+// 		// fmt.Println(outputString)
+
+// 		// // 특정 값 추출
+// 		// encryptingKey = []byte(outputString)
+// 		// fmt.Println("===")
+// 		// fmt.Println(encryptingKey)
+// 		encryptingKey = []byte("9jNyfLp6l-_=rRaFSU-3Or.UzKhUl[$c")
+// 		encInit = true
+// 	}
+// }
